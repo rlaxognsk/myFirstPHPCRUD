@@ -1,0 +1,31 @@
+#board {
+    position: relative;
+}
+
+.wrap_board {
+    position: relative;
+    margin: 20px auto;
+    width: 800px;
+}
+
+table {
+    border-top: 1px solid #aaa;
+    border-bottom: 1px solid #aaa;
+    padding: 5px 10px;
+}
+
+th {
+    padding: 0 5px;
+    font-size: 12px;
+    
+    &.bd_num { width: 50px; }
+    &.a_t { width: 470px; }
+    &.a_w { width: 100px; }
+    &.a_d { width: 180px; }
+}
+
+td {
+    padding: 0 5px;
+    font-size: 12px;
+    text-align: center;
+}
