@@ -1,0 +1,51 @@
+#read {
+    position: relative;
+    margin-top: 30px;
+}
+
+.wrap_read {
+    width: 900px;
+    margin: 0 auto;
+}
+
+.read_head {
+    
+    border-top: 1px solid #aaa;
+    border-bottom: 1px solid #aaa;
+    padding: 10px 25px;
+    &:after {
+        display: block;
+        clear: both;
+        content: '';
+    }
+}
+
+.head_left {
+    float: left;
+    
+    .a_t {
+        font-size: 14px;
+    }
+    
+    .a_w {
+        font-size: 12px;
+    }
+    
+    .writer {
+        margin-top: 10px;
+        font-size: 13px;
+    }
+}
+
+.head_right {
+    float: right;
+    
+    .a_d {
+        font-size: 12px;
+    }
+}
+
+.read_body {
+    padding: 30px 15px;
+    border-bottom: 1px solid #aaa;
+}
