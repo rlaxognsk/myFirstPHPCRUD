@@ -49,6 +49,8 @@ try {
 
         $prepare->execute( array( ':id' => $id, ':pass' => $pass, ':email' => $email ) );
 
+        session_start();
+        $_SESSION[ 'valid' ] = $id;
         echo 'ok';
     }
 }

@@ -26,7 +26,8 @@ POFOL.login = {
             $loginID = $( '#loginID' ),
             $loginPass = $( '#loginPass' ),
             $loginFail = $( '.login_failed' ),
-            $loginBtn = $( '#submit' );
+            $loginBtn = $( '#submit' ),
+            $inputs = $( 'input' );
             
         
         
@@ -37,23 +38,28 @@ POFOL.login = {
                 user_pass: $loginPass.val()
             };
             
+            $inputs.attr( 'disabled', 'disabled' );
             e.preventDefault();
             $loginFail.css( 'visibility', 'hidden' );
             
             if ( postData.user_id === '' ) {
                 
                 alert( '아이디를 입력해주세요. ' );
+                $inputs.removeAttr( 'disabled' );
                 $loginID.trigger( 'focus' );
+
                 return false;
             }
             
             if ( postData.user_pass === '' ) {
                 
                 alert( '비밀번호를 입력해주세요.' );
+                $inputs.removeAttr( 'disabled' );
                 $loginPass.trigger( 'focus' );
                 return false;
             }
-            
+
+            $inputs.attr( 'disabled', 'disabled' );
             $loginBtn
                 .attr( 'value', '로그인중...')
                 .addClass( 'active' );
@@ -72,6 +78,7 @@ POFOL.login = {
                     }
                     else {
                         $loginFail.css( 'visibility', 'visible' );
+                        $inputs.removeAttr( 'disabled' );
                         $loginBtn
                             .attr( 'value', '로그인' )
                             .removeClass( 'active' );

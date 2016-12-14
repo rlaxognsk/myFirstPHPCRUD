@@ -23,7 +23,11 @@ POFOL.join = {
             $id_valid = $id.next(),
             sto = null;
 
-        $id.on( 'keyup', function () {
+        $id.on( 'keyup.join', function ( e ) {
+
+            if ( e.keyCode === 13 ) {
+                return false;
+            }
 
             if ( this.value.length < 4 || this.value.length > 20 ) {
 
@@ -78,7 +82,11 @@ POFOL.join = {
             $pass_valid = $pass.next(),
             $pass_check_valid = $pass_check.next();
 
-        $pass.on( 'keyup' , function () {
+        $pass.on( 'keyup.join' , function ( e ) {
+
+            if ( e.keyCode === 13 ) {
+                return false;
+            }
 
             if ( this.value.length < 4 || this.value.length > 20 ) {
 
@@ -93,7 +101,11 @@ POFOL.join = {
             
         } );
 
-        $pass_check.on( 'keyup' , function () {
+        $pass_check.on( 'keyup.join' , function ( e ) {
+
+            if ( e.keyCode === 13 ) {
+                return false;
+            }
 
             if ( this.value !== $pass.val() ) {
                 $pass_check_valid.css( 'color', '#f00' )[ 0 ].innerHTML = '비밀번호가 같지 않습니다.';
@@ -119,7 +131,11 @@ POFOL.join = {
 
         var sto = null;
 
-        $email.on( 'keyup', function () {
+        $email.on( 'keyup.join', function ( e ) {
+
+            if ( e.keyCode === 13 ) {
+                return false;
+            }
 
             clearTimeout( sto );
             if ( this.value.search( /.+@.+\..+/ ) === -1 ) {
@@ -193,14 +209,18 @@ POFOL.join = {
             default:
                 break;
         }
+        $( '#submit' ).attr( 'value', '가입' );
+        $( 'input' ).removeAttr( 'disabled' );
 
     },
     submit: function () {
 
         var that = this;
-        var $join = $( '#join' );
+        var $join = $( '#join' ),
+            $submit = $( '#submit' ),
+            $inputs = $( 'input' );
         
-        $join.on( 'submit', function ( e ) {
+        $join.on( 'submit.join', function ( e ) {
 
             if ( !that.idValid ) {
                 that.alertTrigger( 'id' );
@@ -231,6 +251,9 @@ POFOL.join = {
                 user_email: $( '#user_email' ).val()
             };
 
+            $submit.attr( 'value', '가입 요청중...' );
+            $inputs.attr( 'disabled', 'disabled' );
+
             $.ajax( {
 
                 url: 'check.php',
@@ -242,8 +265,9 @@ POFOL.join = {
                 .done( function ( req ) {
 
                     if ( req === 'ok' ) {
-
+                        $submit.attr( 'value', '가입성공' );
                         alert( '회원가입이 완료되었습니다.' );
+                        
                         var prevPage = document.cookie.match( /prevPage=(\S*)(?:$|;)/ );
                         location.href = prevPage !== null ? prevPage[ 1 ] : '/';
                         return true;

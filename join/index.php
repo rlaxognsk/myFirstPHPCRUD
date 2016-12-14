@@ -33,7 +33,7 @@
                                 <p class="valid_email"></p>
                             </div>
                             <div class="join_input" style="margin-top: 15px;">
-                                <input type="submit" value="가입"/>
+                                <input id="submit" type="submit" value="가입"/>
                             </div>
                         </div>
                     </form>
