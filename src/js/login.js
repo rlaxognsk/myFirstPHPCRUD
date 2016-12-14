@@ -1,4 +1,5 @@
-var POFOL = {
+var POFOL = POFOL || {};
+POFOL.login = {
     
     init: function () {
         
@@ -66,7 +67,8 @@ var POFOL = {
                 success: function ( req ) {
                     
                     if ( req === 'success' ) {
-                        location.href = '/';
+                        var prevPage = ( document.cookie ).match( /prevPage=(\S*)(?:$|;)/ );
+                        location.href = prevPage !== null ? prevPage[ 1 ] : '/';
                     }
                     else {
                         $loginFail.css( 'visibility', 'visible' );
@@ -82,5 +84,5 @@ var POFOL = {
 };
 
 $( function () {
-    POFOL.init();
+    POFOL.login.init();
 } );

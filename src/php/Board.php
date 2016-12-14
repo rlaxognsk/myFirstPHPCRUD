@@ -3,11 +3,11 @@ require_once( $_SERVER[ 'DOCUMENT_ROOT' ] . '/DB.php' );
 
 class Board
 {
-    public static function showList()
+    public static function showBoard()
     {
         
         $pdo = DB::connect();
-        $board = isset( $_GET[ 'board' ] ) ? $_GET[ 'board' ] : 'main';
+        $board = isset( $_GET[ 'board' ] ) ? $_GET[ 'board' ] : header( 'Location: /?board=main' );
         $sql = "SELECT board_name, board_number, article_title, article_writer, article_date from articles where board_name = '$board'";
         
         // table head
@@ -23,21 +23,50 @@ class Board
         
         // table body
         echo '<tbody>';
-        foreach ( $pdo->query( $sql ) as $row ) {
-            $link = '/read/?board=' . $board . '&no=' . $row[ 'board_number' ];
-            echo '<tr>';
-            echo '<td class="bd_num">' . $row[ 'board_number' ] . '</td>';
-            echo '<td class="a_t"><a href="' . $link . '">' . $row[ 'article_title' ] . '</a></td>';
-            echo '<td class="a_w">' . $row[ 'article_writer' ] . '</td>';
-            echo '<td class="a_d">' . $row[ 'article_date' ] . '</td>';
-            echo '</tr>';
+
+        try {
+                foreach ( $pdo->query( $sql ) as $row ) {
+                $link = '/read/?board=' . $board . '&no=' . $row[ 'board_number' ];
+                echo '<tr>';
+                echo '<td class="bd_num">' . $row[ 'board_number' ] . '</td>';
+                echo '<td class="a_t"><a href="' . $link . '">' . $row[ 'article_title' ] . '</a></td>';
+                echo '<td class="a_w">' . $row[ 'article_writer' ] . '</td>';
+                echo '<td class="a_d">' . $row[ 'article_date' ] . '</td>';
+                echo '</tr>';
+            }
+            echo '</tbody>';
+            echo '</table>';
+            
+            DB::disconnect();
         }
-        echo '</tbody>';
-        echo '</table>';
-        
-        DB::disconnect();
+        catch ( PDOException $e ) {
+            echo '<tr><td>' . $e->getMessage() . '</td></tr>';
+        }
     }
     
+    public static function showBoardList()
+    {
+        $pdo = DB::connect();
+        $sql = 'SELECT board_name FROM boards';
+
+        try {
+            
+            echo '<ul class="board_list">';
+            foreach ( $pdo->query( $sql ) as $row ) {
+                
+                echo '<li><a href="/?board=' . $row[ 'board_name' ] . '">' . $row[ 'board_name' ] . '</a></li>';
+            }
+            echo '</ul>';
+
+            DB::disconnect();
+
+        }
+        catch ( PDOException $e ) {
+            die( $e->getMessage() );
+        }
+        
+    }
+
     public static function showArticle()
     {
         if ( !isset( $_GET[ 'board' ] ) || !isset( $_GET[ 'no' ] ) ) {

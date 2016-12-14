@@ -2,6 +2,36 @@
     position: relative;
 }
 
+.wrap_board_head {
+    overflow: hidden;
+    padding-right: 10px;
+    padding-bottom: 5px;
+}
+
+.board_list, .auth {
+
+    li {
+        float: left;
+        margin-left: 10px;
+        font-size: 12px;
+        
+    }
+
+    &:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+}
+
+.board_list {
+    float: left;
+}
+
+.auth {
+    float: right;
+}
+
 .wrap_board {
     position: relative;
     margin: 20px auto;

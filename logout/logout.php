@@ -9,4 +9,4 @@ if ( isset( $_COOKIE[ session_name() ] ) ) {
 }
 
 session_destroy();
-header( 'Location: /' );
+header( 'Location: ' . $_COOKIE[ 'prevPage' ] );
