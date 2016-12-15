@@ -8,6 +8,10 @@ session_start();
     <title>CRUD - R</title>
     <link rel="stylesheet" href="/src/css/common.css" />
     <link rel="stylesheet" href="/src/css/read.css" />
+    <script src="/src/js/cookie.js"></script>
+    <script>
+        POFOL.cookie.set( 'prevPage', location.href );
+    </script>
 </head>
 <body>
     <div id="wrap">
@@ -30,5 +34,3 @@ session_start();
     </div>
 </body>
 </html>
-
-

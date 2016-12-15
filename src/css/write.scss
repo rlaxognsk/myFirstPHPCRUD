@@ -1,0 +1,70 @@
+#writeForm {
+    position: relative;
+    width: 750px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #aaa;
+    
+}
+
+.wrap_writeForm {
+    position: relative;
+}
+
+.input_box {
+
+    padding: 5px 0;
+
+    .input_name {
+        display: inline-block;
+        width: 80px;
+        font-size: 14px;
+    }
+
+    input {
+        width: 550px;
+        height: 18px;
+        padding: 3px 6px;
+        vertical-align: middle;
+    }
+}
+
+#writer {
+    border: none;
+    background: none;
+    cursor: text;
+}
+.contents {
+    width: 100%;
+    height: 600px;
+}
+
+#editor {
+    position: relative;
+    height: 500px;
+    margin-top: 20px;
+}
+
+.form_button_wrap {
+    position: relative;
+    padding-top: 15px;
+    text-align: right;
+
+    button {
+        position: relative;
+        width: 80px;
+        height: 30px;
+        color: #fff;
+        border: none;
+        background-color: #aaa;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #bcbcbc;
+        }
+        &:active {
+            color: #555;
+            background-color: #ddd;
+        }
+    }
+}

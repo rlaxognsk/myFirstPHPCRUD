@@ -51,10 +51,14 @@ try {
 
         session_start();
         $_SESSION[ 'valid' ] = $id;
+        
         echo 'ok';
     }
 }
 catch ( PDOException $e ) {
 
     echo 'error';
+}
+finally {
+    DB::disconnect();
 }

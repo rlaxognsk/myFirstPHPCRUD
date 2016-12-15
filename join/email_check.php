@@ -24,7 +24,11 @@ try {
     else {
         echo 'x';
     }
+
 }
 catch ( PDOException $e ) {
     echo 'x';
+}
+finally {
+    DB::disconnect();
 }

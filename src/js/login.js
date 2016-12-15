@@ -28,6 +28,8 @@ POFOL.login = {
             $loginFail = $( '.login_failed' ),
             $loginBtn = $( '#submit' ),
             $inputs = $( 'input' );
+
+        var that = this;
             
         
         
@@ -73,8 +75,9 @@ POFOL.login = {
                 success: function ( req ) {
                     
                     if ( req === 'success' ) {
-                        var prevPage = ( document.cookie ).match( /prevPage=(\S*)(?:$|;)/ );
-                        location.href = prevPage !== null ? prevPage[ 1 ] : '/';
+                        // var prevPage = ( document.cookie ).match( /prevPage=(\S*)(?:$|;)/ );
+                        var prevPage = POFOL.cookie.get( 'prevPage' );
+                        location.href = prevPage !== null ? prevPage : '/';
                     }
                     else {
                         $loginFail.css( 'visibility', 'visible' );

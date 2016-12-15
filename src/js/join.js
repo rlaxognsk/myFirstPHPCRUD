@@ -35,7 +35,7 @@ POFOL.join = {
                 that.idValid = false;
                 return false;
             }
-            else if ( this.value.search( /\W/ ) !== -1 ) {
+            if ( this.value.search( /\W/ ) !== -1 ) {
 
                 $id_valid.css( 'color', '#f00' )[ 0 ].innerHTML = '아이디는 영문자, 숫자, _ 만 가능합니다.';
                 that.idValid = false;
@@ -268,8 +268,9 @@ POFOL.join = {
                         $submit.attr( 'value', '가입성공' );
                         alert( '회원가입이 완료되었습니다.' );
                         
-                        var prevPage = document.cookie.match( /prevPage=(\S*)(?:$|;)/ );
-                        location.href = prevPage !== null ? prevPage[ 1 ] : '/';
+                        // var prevPage = document.cookie.match( /prevPage=(\S*)(?:$|;)/ );
+                        var prevPage = POFOL.cookie.get( 'prevPage' );
+                        location.href = prevPage !== null ? prevPage : '/';
                         return true;
 
                     }

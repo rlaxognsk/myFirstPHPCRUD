@@ -35,27 +35,59 @@
 .wrap_board {
     position: relative;
     margin: 20px auto;
-    width: 800px;
+    width: 860px;
+}
+
+.table_wrapper {
+    width: 860px;
+    padding: 10px 0;
+    border-top: 1px solid #aaa;
+    border-bottom: 1px solid #aaa;
 }
 
 table {
-    border-top: 1px solid #aaa;
-    border-bottom: 1px solid #aaa;
-    padding: 5px 10px;
+    border-collapse: collapse;
 }
 
 th {
-    padding: 0 5px;
+    height: 25px;
     font-size: 12px;
     
-    &.bd_num { width: 50px; }
-    &.a_t { width: 470px; }
-    &.a_w { width: 100px; }
-    &.a_d { width: 180px; }
+    &.bd_num { width: 80px; }
+    &.a_t { width: 530px; }
+    &.a_w { width: 140px; }
+    &.a_d { width: 100px; }
 }
 
 td {
-    padding: 0 5px;
+    padding: 3px 5px;
     font-size: 12px;
     text-align: center;
+
+    &.a_t { text-align: left; }
+}
+
+tbody {
+
+    tr {
+
+        &:hover {
+            background-color: #eee;
+        }
+    }
+}
+.wrap_board_foot {
+    overflow: hidden;
+    padding-right: 10px;
+}
+
+.article_manage {
+
+    float: right;
+
+    li {
+        float: left;
+        margin-left: 10px;
+        font-size: 12px;
+    }
 }

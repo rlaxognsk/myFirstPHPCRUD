@@ -5,43 +5,60 @@ class Board
 {
     public static function showBoard()
     {
-        
-        $pdo = DB::connect();
-        $board = isset( $_GET[ 'board' ] ) ? $_GET[ 'board' ] : header( 'Location: /?board=main' );
-        $sql = "SELECT board_name, board_number, article_title, article_writer, article_date from articles where board_name = '$board'";
-        
-        // table head
-        echo '<table>';
-        echo '<thead>';
-        echo '<tr>';
-        echo '<th class="bd_num">no</th>';
-        echo '<th class="a_t">제목</th>';
-        echo '<th class="a_w">작성자</th>';
-        echo '<th class="a_d">날짜</th>';
-        echo '</tr>';
-        echo '</thead>';
-        
-        // table body
-        echo '<tbody>';
-
         try {
-                foreach ( $pdo->query( $sql ) as $row ) {
-                $link = '/read/?board=' . $board . '&no=' . $row[ 'board_number' ];
+
+            $pdo = DB::connect();
+            $board = isset( $_GET[ 'board' ] ) ? $_GET[ 'board' ] : header( 'Location: /?board=main' );
+            $sql = "SELECT board_name, board_number, article_title, article_writer, article_date from articles where board_name = :board";
+
+            $prepare = $pdo->prepare( $sql );
+            $prepare->execute( array( ':board' => $board ) );
+            $result = $prepare->fetchAll( PDO::FETCH_ASSOC );
+
+            // table head
+            echo '<table>';
+            echo '<thead>';
+            echo '<tr>';
+            echo '<th class="bd_num">no</th>';
+            echo '<th class="a_t">제목</th>';
+            echo '<th class="a_w">작성자</th>';
+            echo '<th class="a_d">날짜</th>';
+            echo '</tr>';
+            echo '</thead>';
+
+            // table body
+            if ( !empty( $result ) ) {
+
+                echo '<tbody>';
+
+                foreach ( $result as $data => $row ) {
+                    $link = '/read/?board=' . $board . '&no=' . $row[ 'board_number' ];
+                    echo '<tr>';
+                    echo '<td class="bd_num">' . $row[ 'board_number' ] . '</td>';
+                    echo '<td class="a_t"><a href="' . $link . '">' . $row[ 'article_title' ] . '</a></td>';
+                    echo '<td class="a_w">' . $row[ 'article_writer' ] . '</td>';
+                    echo '<td class="a_d">' . $row[ 'article_date' ] . '</td>';
+                    echo '</tr>';
+                }
+
+                echo '</tbody>';
+            }
+            else {
                 echo '<tr>';
-                echo '<td class="bd_num">' . $row[ 'board_number' ] . '</td>';
-                echo '<td class="a_t"><a href="' . $link . '">' . $row[ 'article_title' ] . '</a></td>';
-                echo '<td class="a_w">' . $row[ 'article_writer' ] . '</td>';
-                echo '<td class="a_d">' . $row[ 'article_date' ] . '</td>';
+                echo '<td class="empty_boards" colspan="4">게시글이 없습니다.</td>';
                 echo '</tr>';
             }
-            echo '</tbody>';
-            echo '</table>';
             
-            DB::disconnect();
+            echo '</table>';
+
         }
         catch ( PDOException $e ) {
             echo '<tr><td>' . $e->getMessage() . '</td></tr>';
         }
+        finally {
+            DB::disconnect();
+        }
+
     }
     
     public static function showBoardList()
@@ -53,8 +70,10 @@ class Board
             
             echo '<ul class="board_list">';
             foreach ( $pdo->query( $sql ) as $row ) {
-                
-                echo '<li><a href="/?board=' . $row[ 'board_name' ] . '">' . $row[ 'board_name' ] . '</a></li>';
+
+                $active = $_GET[ 'board' ] === $row[ 'board_name' ] ? 'active' : '';
+
+                echo '<li class="' . $active . '"><a href="/?board=' . $row[ 'board_name' ] . '">' . $row[ 'board_name' ] . '</a></li>';
             }
             echo '</ul>';
 
@@ -93,9 +112,12 @@ class Board
             echo '<div class="read_body">' . $result[ 'article_text' ] . '</div>';
             
         }
-        catch ( PDOExeception $e ) {
+        catch ( PDOExceeption $e ) {
             die( $e->getMessage() );
         }
-        
+        finally {
+            DB::disconnect();
+        }
+
     }
 }
