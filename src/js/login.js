@@ -5,6 +5,7 @@ POFOL.login = {
         
         this.inputFocus();
         this.formCheck();
+        $( '#loginID' ).trigger( 'focus' );
     },
     
     inputFocus: function () {

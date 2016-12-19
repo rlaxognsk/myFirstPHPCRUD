@@ -4,14 +4,16 @@
 }
 
 .wrap_read {
-    width: 900px;
+    width: 800px;
     margin: 0 auto;
+    margin-bottom: 50px;
 }
 
 .read_head {
     
+    border-top: 1px solid #aaa;
     border-bottom: 1px solid #aaa;
-    padding: 10px 25px;
+    padding: 10px 5px;
     &:after {
         display: block;
         clear: both;
@@ -21,9 +23,17 @@
 
 .head_left {
     float: left;
-    
+    color: #aaa;
+
+    p {
+        margin: 5px 0;
+    }
+
     .a_t {
-        font-size: 14px;
+        margin: 5px 0;
+        font-size: 22px;
+        font-weight: bold;
+        color: #000;
     }
     
     .a_w {
@@ -36,15 +46,22 @@
     }
 }
 
-.head_right {
-    float: right;
-    
-    .a_d {
-        font-size: 12px;
+.modify {
+    font-size: 12px;
+
+    a {
+        color: inherit;
+        
+        text-decoration: none;
     }
 }
 
 .read_body {
-    padding: 30px 15px;
+    padding: 30px 5px;
     border-bottom: 1px solid #aaa;
+    font-size: 13px;
+}
+
+.comment_list {
+    list-style-type: none;
 }

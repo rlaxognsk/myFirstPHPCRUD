@@ -51,6 +51,7 @@ try {
 
         session_start();
         $_SESSION[ 'valid' ] = $id;
+        $_SESSION[ 'is_admin' ] = false;
         
         echo 'ok';
     }

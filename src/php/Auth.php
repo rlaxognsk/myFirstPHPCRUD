@@ -27,10 +27,10 @@ class Auth
 
         $board = isset( $_GET[ 'board' ] ) ? $_GET[ 'board' ] : 'main';
         echo '<ul class="article_manage">';
-        echo '<li><a href="/write/?board=' . $board . '" class="article_write">글쓰기</a></li>';
+        echo '<li><button data-href="/write/?board=' . $board . '" class="article_write">글쓰기</button></li>';
 
         if ( isset( $_SESSION[ 'is_admin' ] ) && $_SESSION[ 'is_admin' ] ) {
-            echo '<li><a class="article_delete" href="javascrit: void();">글삭제</a></li>';
+            echo '<li><button class="article_delete">글삭제</button></li>';
         }
         echo '</ul>';
     }

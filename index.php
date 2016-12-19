@@ -12,6 +12,7 @@ require_once( '/src/php/Auth.php' );
     <link rel="stylesheet" href="src/css/main.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="/src/js/cookie.js"></script>
+    <script src="/src/js/utils.js"></script>
     <script src="/src/js/main.js"></script>
     <script>
         POFOL.cookie.set( 'prevPage', location.href );

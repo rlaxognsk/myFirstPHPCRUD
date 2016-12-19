@@ -9,7 +9,8 @@ class Board
 
             $pdo = DB::connect();
             $board = isset( $_GET[ 'board' ] ) ? $_GET[ 'board' ] : header( 'Location: /?board=main' );
-            $sql = "SELECT board_name, board_number, article_title, article_writer, article_date from articles where board_name = :board";
+            $sql = "SELECT board_name, board_number, article_title, article_writer, article_date FROM articles WHERE board_name = :board "
+                    . "ORDER BY board_number DESC";
 
             $prepare = $pdo->prepare( $sql );
             $prepare->execute( array( ':board' => $board ) );
@@ -23,6 +24,9 @@ class Board
             echo '<th class="a_t">제목</th>';
             echo '<th class="a_w">작성자</th>';
             echo '<th class="a_d">날짜</th>';
+            if ( !empty( $_SESSION[ 'is_admin' ] ) ) {
+                echo '<th class="a_delete">삭제<input type="checkbox" /></th>';
+            }
             echo '</tr>';
             echo '</thead>';
 
@@ -38,6 +42,9 @@ class Board
                     echo '<td class="a_t"><a href="' . $link . '">' . $row[ 'article_title' ] . '</a></td>';
                     echo '<td class="a_w">' . $row[ 'article_writer' ] . '</td>';
                     echo '<td class="a_d">' . $row[ 'article_date' ] . '</td>';
+                    if ( !empty( $_SESSION[ 'is_admin' ] ) ) {
+                        echo '<td class="a_delete"><input type="checkbox" /></td>';
+                    }
                     echo '</tr>';
                 }
 
@@ -96,23 +103,29 @@ class Board
         $sql = 'SELECT * from articles where board_name = :board and board_number = :number';
 
         try {
-            
             $prepare = $pdo->prepare( $sql );
             $prepare->execute( array( ':board' => $_GET[ 'board' ], ':number' => $_GET[ 'no' ] ) );
             $result = $prepare->fetch( PDO::FETCH_ASSOC );
             
+            if ( isset( $_SESSION[ 'valid' ] ) ) {
+                $is_modified = $_SESSION[ 'valid' ] === $result[ 'article_writer' ] || $_SESSION[ 'is_admin' ];
+            }
+            else {
+                $is_modified = false;
+            }
+
             echo '<div class="read_head">';
-            echo '<div class="head_left">';
-            echo '<h3 class="a_t">' . $result[ 'article_title' ] . '</h3>';
-            echo '<p class="writer">작성자 <span class="a_w">' . $result[ 'article_writer' ] . '</span></p>';
+                echo '<div class="head_left">';
+                    echo '<h3 class="a_t">' . $result[ 'article_title' ] . '</h3>';
+                    echo '<p class="writer"><span class="a_w">' . $result[ 'article_writer' ] . '</span> | <span class="a_d">' . $result[ 'article_date' ] . '</span></p>';
+                    if ( $is_modified ) {
+                        echo '<p class="modify"><a href="/modify/?board=' . $_GET[ 'board' ] . '&no=' . $_GET[ 'no' ] . '" class="a_modify">수정</a> | <a href="#" class="a_delete">삭제</a></p>';
+                    }
+                echo '</div>';
             echo '</div>';
-            echo '<div class="head_right">';
-            echo '<span class="a_d">' . $result[ 'article_date' ] . '</span>';
-            echo '</div></div>';
             echo '<div class="read_body">' . $result[ 'article_text' ] . '</div>';
-            
         }
-        catch ( PDOExceeption $e ) {
+        catch ( PDOException $e ) {
             die( $e->getMessage() );
         }
         finally {
