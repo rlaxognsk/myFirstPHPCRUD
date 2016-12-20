@@ -24,6 +24,7 @@ try {
     $article_writer = $_SESSION[ 'valid' ];
 
     $pdo = DB::connect();
+    $pdo->beginTransaction();
 
     $insertSQL = 'INSERT INTO articles ( board_name, board_number, article_title, article_writer, article_date, article_text ) '
         . 'VALUES ( :board_name, :board_number, :article_title, :article_writer, CURDATE(), :article_text )';
@@ -56,6 +57,7 @@ try {
     $prepare = $pdo->prepare( $updateSQL );
     $prepare->execute( $tag );
 
+    $pdo->commit();
     echo 'ok';
 }
 catch ( PDOException $e ) {
