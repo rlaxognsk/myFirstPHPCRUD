@@ -1,3 +1,63 @@
+.wrap_read_head {
+    overflow: hidden;
+    padding-right: 10px;
+    padding-bottom: 5px;
+}
+
+.board_list, .auth {
+
+    margin: 0;
+    padding: 0;
+    list-style-type: none;  
+
+    li {
+        margin: 0;
+        padding: 0;
+        float: left;
+        margin-left: 3px;
+        font-size: 12px;
+        
+    }
+
+    &:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+}
+
+.board_list {
+
+    float: left;
+
+    li {
+        border-radius: 15px;
+        border: 1px solid #aaa;
+
+        &.active, &:hover {
+            background-color: #aaa;
+            color: #fff;
+        }
+
+        a {
+            display: block;
+            height: 20px;
+            padding: 1px 10px;
+            color: inherit;
+            text-decoration: none;
+        }
+
+    }
+}
+
+.auth {
+    float: right;
+
+    a {
+        text-decoration: none;
+    }
+}
+
 #read {
     position: relative;
     margin-top: 30px;
@@ -21,7 +81,7 @@
     }
 }
 
-.head_left {
+.head_wrap {
     float: left;
     color: #aaa;
 
@@ -57,11 +117,88 @@
 }
 
 .read_body {
-    padding: 30px 5px;
+    padding: 60px 5px;
     border-bottom: 1px solid #aaa;
     font-size: 13px;
 }
 
+.read_comment {
+    padding: 10px 5px;
+    border-bottom: 1px solid #aaa;
+}
+.comments_count {
+    margin: 5px;
+    color: #333;
+    font-size: 14px;
+
+    .bold {
+        font-weight: bold;
+    }
+}
 .comment_list {
-    list-style-type: none;
+
+    font-size: 13px;
+    margin-top: 5px;
+    border-collapse: collapse;
+
+    tr:hover {
+        background-color: #eee;
+    }
+    td {
+        padding: 5px 0;
+    }
+    .c_w { width: 100px; vertical-align: top; }
+    .c_text {
+        width: 800px;
+        word-break: break-all;
+        }
+    .c_d { width: 90px; vertical-align: top; }
+    .c_delete {
+        width: 10px;
+        vertical-align: top;
+        a {
+            color: #00f;
+            text-decoration: none;
+        }
+        
+    }
+    .no_comments {
+        width: 800px;
+        text-align: center;
+        font-weight: bold;
+    }
+}
+
+.write_comment {
+    padding: 10px 5px;
+
+    p {
+        margin: 5px;
+        padding: 0;
+        font-size: 14px;
+    }
+}
+
+.write_wrapper {
+    height: 120px;
+}
+.comment_writer {
+    float: left;
+    text-align: center;
+    width: 88px;
+    height: 100%;
+}
+
+#commentText {
+    width: 580px;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+#submit {
+    width: 100px;
+    height: 100%;
+    margin-left: 10px;
+    vertical-align: top;
+    cursor: pointer;
 }

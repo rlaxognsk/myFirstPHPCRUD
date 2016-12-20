@@ -46,4 +46,20 @@ class Auth
         echo '<li><a href="/delete" class="article_delete">삭제</a></li>';
         echo '</ul>';
     }
+
+    public static function writeComment()
+    {
+        if ( !isset( $_SESSION[ 'valid' ] ) ) {
+            exit;
+        }
+
+        echo '<form id="commentSend" method="post" action="./comment.php">';
+            echo '<p>댓글달기</p>';
+            echo '<div class="write_wrapper">';
+                echo '<span class="comment_writer">' . $_SESSION[ 'valid' ] . '</span>';
+                echo '<textarea id="commentText" name="comment_text" maxlength="200"></textarea>';
+                echo '<input id="submit" type="submit" value="등록" />';
+            echo '</div>';
+        echo '</form>';
+    }
 }

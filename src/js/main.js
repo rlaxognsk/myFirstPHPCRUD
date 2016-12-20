@@ -50,7 +50,7 @@ POFOL.main = {
                 };
 
                 $.ajax( {
-                    url: '/read/deletes.php',
+                    url: '/admin/articles_delete.php',
                     method: 'post',
                     data: data,
                     dataType: 'text'
