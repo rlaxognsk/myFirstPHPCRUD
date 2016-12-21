@@ -32,7 +32,7 @@ POFOL.read = {
                 } )
                 .done( function ( req ) {
                     alert( req );
-                    location.href = POFOL.cookie.get( 'prevPage' );
+                    location.href = '/?board=' + query.board;
                 } )
                 .fail( function () {
                     alert( '삭제 요청이 처리되지 않았습니다.' );
@@ -46,6 +46,13 @@ POFOL.read = {
         $text = $( '#commentText' ),
         $submit = $( '#submit' );
 
+        $text.on( 'keydown', function ( e ) {
+            if ( e.keyCode === 13 ) {
+                e.preventDefault();
+                $submit.trigger( 'submit' );
+            }
+        } );
+
         $( '#commentSend' ).on( 'submit' , function ( e ) {
             
             e.preventDefault();
@@ -55,7 +62,7 @@ POFOL.read = {
                 comment_text: $text.val(),
             };
 
-            if ( data === '' ) {
+            if ( data.comment_text === '' ) {
                 alert( '댓글 내용을 작성해주세요.' );
                 return false;
             }

@@ -4,11 +4,11 @@ require_once( $_SERVER[ 'DOCUMENT_ROOT' ] . '/DB.php' );
 
 if ( !isset( $_SESSION[ 'valid' ] ) ) {
     echo '로그인된 사용자가 아닙니다.';
-    exit;
+    return false;
 }
 elseif ( !isset( $_POST[ 'parent_article' ] ) || !isset( $_POST[ 'comment_text' ] ) ) {
     echo '데이터가 올바르지 않습니다.';
-    exit;
+    return false;
 }
 
 try {
@@ -35,15 +35,15 @@ try {
     if ( $iresult && $uresult ) {
         $pdo->commit();
         echo 'o';
-        exit;
+        return true;
     }
     else {
         echo '오류: ' . $pdo->errorCode();
-        exit;
+        return false;
     }
 }
 catch ( PDOException $e ) {
-    die( $e->getMessage() );
+    echo 'error';
 }
 finally {
     DB::disconnect();

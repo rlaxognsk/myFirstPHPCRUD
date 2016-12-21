@@ -4,7 +4,7 @@ require_once( $_SERVER[ 'DOCUMENT_ROOT' ] . '/DB.php' );
 
 if ( empty( $_SESSION[ 'is_admin' ] ) ) {
     echo '권한이 없습니다.';
-    exit;
+    return false;
 }
 
 try {
@@ -16,16 +16,16 @@ try {
 
     if ( $result > 0 ) {
         echo $result . '개의 데이터 삭제 성공.';
-        exit;
+        return true;
     }
     else {
         echo '데이터 삭제 실패.';
-        exit;
+        return false;
     }
     
 }
 catch ( PDOException $e ) {
-    die( $e->getMessage() );
+    echo $e->getMessage();
 }
 finally {
     DB::disconnect();

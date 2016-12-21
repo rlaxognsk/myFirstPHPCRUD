@@ -6,7 +6,7 @@ try {
 
     if ( !isset( $_SESSION[ 'valid' ] ) ) {
         echo '로그인된 사용자가 아닙니다.';
-        exit;
+        return false;
     }
 
     $post = $_POST;
@@ -15,7 +15,7 @@ try {
          !isset( $post[ 'article_text' ] ) ) {
 
         echo '올바르지 않은 데이터입니다.';
-        exit;
+        return false;
     }
 
     $board_name = $post[ 'board_name' ];
@@ -26,12 +26,11 @@ try {
     $pdo = DB::connect();
     $pdo->beginTransaction();
 
-    $insertSQL = 'INSERT INTO articles ( board_name, board_number, article_title, article_writer, article_date, article_text ) '
-        . 'VALUES ( :board_name, :board_number, :article_title, :article_writer, CURDATE(), :article_text )';
+    $insertSQL = "INSERT INTO articles VALUES ( '', :board_name, :board_number, :article_title, '', :article_writer, CURDATE(), :article_text )";
 
-    $updateSQL = 'UPDATE boards SET board_latest_number = :board_latest_number WHERE board_name = :board_name';
+    $updateSQL = "UPDATE boards SET board_latest_number = :board_latest_number WHERE board_name = :board_name";
 
-    $findNumberSQL = 'SELECT * FROM boards WHERE board_name = :board_name';
+    $findNumberSQL = "SELECT * FROM boards WHERE board_name = :board_name";
 
     // get latest article number
     $prepare = $pdo->prepare( $findNumberSQL );
@@ -40,7 +39,7 @@ try {
     
     if ( empty( $board_number ) ) {
         echo '존재하지 않는 게시판입니다.';
-        exit;
+        return false;
     }
 
     $board_number = $board_number[ 'board_latest_number' ] + 1;
@@ -62,7 +61,6 @@ try {
 }
 catch ( PDOException $e ) {
     echo '오류가 발생하였습니다. 잠시 후 다시시도해주세요. ';
-    exit;
 }
 finally {
     DB::disconnect();

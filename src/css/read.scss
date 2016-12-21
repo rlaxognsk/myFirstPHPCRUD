@@ -190,9 +190,11 @@
 }
 
 #commentText {
-    width: 580px;
     box-sizing: border-box;
+    width: 580px;
     height: 100%;
+    resize: none;
+
 }
 
 #submit {

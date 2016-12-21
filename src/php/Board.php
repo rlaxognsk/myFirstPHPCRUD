@@ -3,6 +3,12 @@ require_once( $_SERVER[ 'DOCUMENT_ROOT' ] . '/DB.php' );
 
 class Board
 {
+    
+    /* pagination variable */
+
+    private static $pagePerArticle = 5;
+    private static $blockPerPage = 5;
+
     public function __construct() {
         echo 'Don\'t create this class instance.';
     }
@@ -10,16 +16,22 @@ class Board
     public static function showBoard()
     {
         try {
-
             $pdo = DB::connect();
+
+            $pagePerArticle = self::$pagePerArticle;
+            $blockPerPage = self::$blockPerPage;
+
             $board = isset( $_GET[ 'board' ] ) ? $_GET[ 'board' ] : header( 'Location: /?board=main' );
+            $offset = isset( $_GET[ 'page' ] ) ? $_GET[ 'page' ] : 1;
+            $offset = ( int )( $offset - 1 ) * $pagePerArticle;
             $sql = "SELECT id, board_name, board_number, article_title, article_comment, article_writer, article_date FROM articles WHERE board_name = :board "
-                    . "ORDER BY board_number DESC";
+                    . "ORDER BY board_number DESC LIMIT {$pagePerArticle} OFFSET :offset";
 
             $prepare = $pdo->prepare( $sql );
-            $prepare->execute( array( ':board' => $board ) );
+            $prepare->bindParam( ':board', $board, PDO::PARAM_STR );
+            $prepare->bindParam( ':offset', $offset, PDO::PARAM_INT );
+            $prepare->execute();
             $result = $prepare->fetchAll( PDO::FETCH_ASSOC );
-
             // table head
             echo '<table>';
             echo '<thead>';
@@ -36,9 +48,8 @@ class Board
 
             // table body
             if ( !empty( $result ) ) {
-
                 echo '<tbody>';
-
+                
                 foreach ( $result as $data => $row ) {
                     $link = '/read/?board=' . $board . '&no=' . $row[ 'board_number' ];
                     $comment = $row[ 'article_comment' ] > 0 ? '[' . $row[ 'article_comment' ] . ']' : '';
@@ -89,11 +100,12 @@ class Board
             }
             echo '</ul>';
 
-            DB::disconnect();
-
         }
         catch ( PDOException $e ) {
-            die( $e->getMessage() );
+            echo 'error';
+        }
+        finally {
+            DB::disconnect();
         }
         
     }
@@ -187,7 +199,60 @@ class Board
             echo '</table>';
         }
         catch ( PDOException $e ) {
-            die( $e->getMessage() );
+            echo 'error';
+        }
+        finally {
+            DB::disconnect();
+        }
+    }
+
+    public static function paging()
+    {
+        try {
+            $getPage = isset( $_GET[ 'page' ] ) ? ( int )( $_GET[ 'page' ] ) : 1;
+            $pagePerArticle = self::$pagePerArticle;
+            $blockPerPage = self::$blockPerPage;
+
+            $pdo = DB::connect();
+            $csql = "SELECT COUNT(id) AS count FROM articles";
+            
+            $allArticle = $pdo->query( $csql )->fetch( PDO::FETCH_ASSOC )[ 'count' ];
+            $allPage = ceil( $allArticle / $pagePerArticle );
+            $nowPage = $getPage > 0 ? $getPage : 1;
+            $nowBlock = ceil( $nowPage / $blockPerPage );
+            $lastBlock = ceil( $allPage / $blockPerPage );
+            $prevBlockPage = ( $nowBlock - 1 ) * $blockPerPage;
+            $nextBlockPage = ( ( $nowBlock + 1 ) * $blockPerPage ) - ( $blockPerPage - 1 );
+
+            // rendering start
+            echo '<ul class="pagination">';
+            // loose check
+            if ( $nowBlock != 1 ) {
+                echo '<li><a href="./?board=' . $_GET[ 'board' ] . '&page=' . $prevBlockPage . '"><</a></li>';
+            }
+            
+            for ( $i = 1; $i <= $blockPerPage; $i++ ) {
+                $p = $blockPerPage * ( $nowBlock - 1 ) + $i;
+                if ( $p > $allPage ) {
+                    break;
+                }
+                // loose check
+                if ( $p == $nowPage ) {
+                    echo '<li class="now">';
+                }
+                else {
+                    echo '<li>';
+                }
+
+                echo '<a href="./?board=' . $_GET[ 'board' ] . '&page=' . $p . '">' . $p . '</a></li>';
+            }
+            if ( $nowBlock !== $lastBlock ) {
+                echo '<li><a href="./?board=' . $_GET[ 'board' ] . '&page=' . $nextBlockPage . '">></a></li>';
+            }
+            echo '</ul>';
+        }
+        catch ( PDOException $e ) {
+            echo 'error';
         }
         finally {
             DB::disconnect();

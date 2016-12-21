@@ -22,7 +22,7 @@ class Auth
     public static function articleManage()
     {
         if ( !isset( $_SESSION[ 'valid' ] ) ) {
-            exit;
+            return false;
         }
 
         $board = isset( $_GET[ 'board' ] ) ? $_GET[ 'board' ] : 'main';
@@ -38,7 +38,7 @@ class Auth
     public static function articleModify()
     {
         if ( !isset( $_SESSION[ 'valid' ] ) ) {
-            exit;
+            return false;
         }
 
         echo '<ul class="article_modify">';
@@ -50,7 +50,7 @@ class Auth
     public static function writeComment()
     {
         if ( !isset( $_SESSION[ 'valid' ] ) ) {
-            exit;
+            return false;
         }
 
         echo '<form id="commentSend" method="post" action="./comment.php">';

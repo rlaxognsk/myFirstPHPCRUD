@@ -13,9 +13,11 @@ try {
 
     if ( !isset( $result[ 'user_id' ] ) ) {
         echo 'ok';
+        return true;
     }
     else {
         echo 'x';
+        return false;
     }
 
 }

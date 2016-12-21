@@ -4,11 +4,11 @@ require_once( $_SERVER[ 'DOCUMENT_ROOT' ] . '/DB.php' );
 
 if ( !isset( $_SESSION[ 'valid' ] ) ) {
     echo '로그인 정보가 유효하지 않습니다.';
-    exit;
+    return false;
 }
 else if ( !isset( $_POST[ 'commentID' ] ) ) {
     echo '필수 값이 전송되지 않았습니다.';
-    exit;
+    return false;
 }
 
 try {
@@ -25,11 +25,11 @@ try {
 
     if ( !$prepare->rowCount() > 0 ) {
         echo 'DB에 존재하지 않는 데이터입니다.';
-        exit;
+        return false;
     }
     elseif ( $result[ 'comment_writer' ] !== $writer && !$_SESSION[ 'is_admin' ] ) {
         echo '권한이 없습니다.';
-        exit;
+        return false;
     }
 
     $pdo->beginTransaction();
@@ -44,15 +44,15 @@ try {
     if ( $dresult && $uresult ) {
         $pdo->commit();
         echo 'o';
-        exit;
+        return true;
     }
     else {
         echo '삭제 실패.';
-        exit;
+        return false;
     }
 }
 catch ( PDOException $e ) {
-    die( $e->getMessage() );
+    echo 'error';
 }
 finally {
     DB::disconnect();

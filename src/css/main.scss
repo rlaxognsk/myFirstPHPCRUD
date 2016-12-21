@@ -132,7 +132,7 @@ tbody {
     button {
         position: relative;
         width: 80px;
-        height: 30px;
+        height: 40px;
         color: #fff;
         border: none;
         background-color: #aaa;
@@ -145,5 +145,42 @@ tbody {
             color: #555;
             background-color: #ddd;
         }
+    }
+}
+
+.wrap_pagination {
+    text-align: center;
+}
+
+.pagination {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    &:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+
+    li {
+        float: left;
+        border: 1px solid #aaa;
+        margin-left: 5px;
+        color: #aaa;
+        &.now, &:hover {
+            background-color: #aaa;
+            color: #fff;
+        }
+    }
+
+    a {
+        display: block;
+        width: 38px;
+        height: 38px;
+        text-decoration: none;
+        line-height: 40px;
+        color: inherit;
     }
 }

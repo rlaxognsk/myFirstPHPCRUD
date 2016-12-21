@@ -20,9 +20,11 @@ try {
 
     if ( !isset( $result[ 'user_email' ] ) ) {
         echo 'ok';
+        return true;
     }
     else {
         echo 'x';
+        return false;
     }
 
 }

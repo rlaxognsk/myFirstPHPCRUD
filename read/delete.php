@@ -4,7 +4,7 @@ require_once( $_SERVER[ 'DOCUMENT_ROOT' ] . '/DB.php' );
 
 if ( !isset( $_SESSION[ 'valid' ] ) ) {
     echo '로그인을 해주세요.';
-    exit;
+    return false;
 }
 
 try {
@@ -19,11 +19,11 @@ try {
     
     if ( empty( $result ) ) {
         echo '잘못된 접근입니다.';
-        exit;
+        return false;
     }
     elseif ( !$_SESSION[ 'is_admin' ] && $_SESSION[ 'valid' ] !== $result[ 'article_writer' ] ) {
         echo '권한이 없음';
-        exit;
+        return false;
     }
 
     $sql = 'DELETE FROM articles WHERE id = :id';
@@ -33,15 +33,15 @@ try {
     
     if ( $result ) {
         echo '삭제 완료.';
-        exit;
+        return true;
     }
     else {
         echo '삭제 실패.';
-        exit;
+        return false;
     }
 }
 catch ( PDOException $e ) {
-    die( $e->getMessage() );
+    echo 'error';
 }
 finally {
     DB::disconnect();

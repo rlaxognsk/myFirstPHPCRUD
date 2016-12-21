@@ -32,7 +32,10 @@ require_once( '/src/php/Auth.php' );
                     <?php Board::showBoard(); ?>
                 </div>
                 <div class="wrap_board_foot">
-                    <?php Auth::articleManage() ?>
+                    <?php Auth::articleManage(); ?>
+                    <div class="wrap_pagination">
+                    <?php Board::paging(); ?>
+                    </div>
                 </div>
             </div>
         </div>

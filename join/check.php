@@ -5,22 +5,22 @@ try {
     if ( !isset( $_POST[ 'user_id' ] ) ) {
 
         echo 'id';
-        exit;
+        return false;
     }
     if ( !isset( $_POST[ 'user_pass' ] ) || !isset( $_POST[ 'user_pass_check' ] ) ) {
 
         echo 'pass';
-        exit;
+        return false;
     }
     if ( $_POST[ 'user_pass' ] !== $_POST[ 'user_pass_check' ] ) {
 
         echo 'pass';
-        exit;
+        return false;
     }
     if ( !isset( $_POST[ 'user_email' ] ) ) {
 
         echo 'email';
-        exit;
+        return false;
     }
 
     $id = $_POST[ 'user_id' ];
@@ -37,11 +37,11 @@ try {
 
     if ( isset( $result[ 'user_id' ] ) ) {
         echo 'id';
-        exit;
+        return false;
     }
     else if ( isset( $result[ 'user_pass' ] ) ) {
         echo 'pass';
-        exit;
+        return true;
     }
     else {
         $sql = 'INSERT INTO users ( user_id, user_pass, user_email ) VALUES ( :id, sha1(:pass), :email )';
@@ -57,7 +57,6 @@ try {
     }
 }
 catch ( PDOException $e ) {
-
     echo 'error';
 }
 finally {
