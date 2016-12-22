@@ -136,7 +136,7 @@ class Board
                     echo '<h3 class="a_t">' . $result[ 'article_title' ] . '</h3>';
                     echo '<p class="writer"><span class="a_w">' . $result[ 'article_writer' ] . '</span> | <span class="a_d">' . $result[ 'article_date' ] . '</span></p>';
                     if ( $is_modified ) {
-                        echo '<p class="modify"><a href="/modify/?board=' . $_GET[ 'board' ] . '&no=' . $_GET[ 'no' ] . '" class="a_modify">수정</a> | <a href="#" class="a_delete">삭제</a></p>';
+                        echo '<p class="modify"><a href="/modify/?board=' . $result[ 'board_name' ] . '&no=' . $result[ 'board_number' ] . '" class="a_modify">수정</a> | <a href="#" class="a_delete">삭제</a></p>';
                     }
                     echo '<input id="articleID" type="hidden" value="' . $result[ 'id' ] . '"/>';
                 echo '</div>';
@@ -246,7 +246,8 @@ class Board
 
                 echo '<a href="./?board=' . $_GET[ 'board' ] . '&page=' . $p . '">' . $p . '</a></li>';
             }
-            if ( $nowBlock !== $lastBlock ) {
+
+            if ( $nowBlock < $lastBlock ) {
                 echo '<li><a href="./?board=' . $_GET[ 'board' ] . '&page=' . $nextBlockPage . '">></a></li>';
             }
             echo '</ul>';

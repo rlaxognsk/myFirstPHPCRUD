@@ -11,11 +11,10 @@ require_once( $_SERVER[ 'DOCUMENT_ROOT' ] . '/src/php/Auth.php' );
     <link rel="stylesheet" href="/src/css/common.css" />
     <link rel="stylesheet" href="/src/css/read.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="/src/js/cookie.js"></script>
-    <script>
-        POFOL.cookie.set( 'prevPage', window.location.href );
-    </script>
     <script src="/src/js/utils.js"></script>
+    <script>
+        POFOL.utils.setCookie( 'prevPage', window.location.href );
+    </script>
     <script src="/src/js/read.js"></script>
 </head>
 <body>

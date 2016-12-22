@@ -269,7 +269,7 @@ POFOL.join = {
                         alert( '회원가입이 완료되었습니다.' );
                         
                         // var prevPage = document.cookie.match( /prevPage=(\S*)(?:$|;)/ );
-                        var prevPage = POFOL.cookie.get( 'prevPage' );
+                        var prevPage = POFOL.utils.getCookie( 'prevPage' );
                         location.href = prevPage !== null ? prevPage : '/';
                         return true;
 

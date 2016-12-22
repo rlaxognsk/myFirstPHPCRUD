@@ -14,5 +14,23 @@ POFOL.utils = {
         }
 
         return ret;
+    },
+
+    getCookie: function ( prop ) {
+
+        var reg = new RegExp( prop + '=(\\S*)(?:$|;)' );
+        var result = document.cookie.match( reg );
+
+        if ( result === null ) {
+            return result;
+        }
+        else {
+            return result[ 1 ];
+        }
+    },
+
+    setCookie: function ( prop, value ) {
+
+        document.cookie = prop + '=' + value + '; path=/';
     }
 };

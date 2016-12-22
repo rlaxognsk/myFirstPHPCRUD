@@ -31,7 +31,15 @@ POFOL.write = {
                 article_text: CKEDITOR.instances.ckeditor.getData()
             };
 
-            $( 'button' ).attr( 'disabled' , 'disabled' );
+            if ( editorData.article_title.search( /\S/ ) === -1 ) {
+                
+                alert( '제목을 입력해주세요.' );
+                $( '#title' ).trigger( 'focus' );
+                return false;
+
+            }
+
+            $( 'button' ).prop( 'disabled' , true );
 
             $.ajax( {
                 url: 'write.php',
@@ -41,13 +49,13 @@ POFOL.write = {
             } )
                 .done( function ( req ) { 
                     if ( req === 'ok' ) {
-                        var prevPage = POFOL.cookie.get( 'prevPage' )
-                        location.href = prevPage !== null ? prevPage : '/';
+                        var pageMove = '/?board=' + POFOL.utils.getQueryString().board;
+                        location.href = pageMove;
                     }
                 } )
                 .fail( function () { 
                     alert( req );
-                    $( 'button' ).removeAttr( 'disabled' );
+                    $( 'button' ).prop( 'disabled', false );
                 } );
         } );
     }

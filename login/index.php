@@ -12,7 +12,7 @@ if ( isset( $_SESSION[ 'valid' ] ) ) {
     <link rel="stylesheet" href="/src/css/common.css" />
     <link rel="stylesheet" href="/src/css/login.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="/src/js/cookie.js"></script>
+    <script src="/src/js/utils.js"></script>
     <script src="/src/js/login.js"></script>
 </head>
 <body>

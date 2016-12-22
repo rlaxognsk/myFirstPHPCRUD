@@ -77,7 +77,7 @@ POFOL.login = {
                     
                     if ( req === 'success' ) {
                         // var prevPage = ( document.cookie ).match( /prevPage=(\S*)(?:$|;)/ );
-                        var prevPage = POFOL.cookie.get( 'prevPage' );
+                        var prevPage = POFOL.utils.getCookie( 'prevPage' );
                         location.href = prevPage !== null ? prevPage : '/';
                     }
                     else {

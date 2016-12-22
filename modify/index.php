@@ -11,13 +11,12 @@ session_start();
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="/src/ckeditor/ckeditor.js"></script>
     <script src="/src/js/utils.js"></script>
-    <script src="/src/js/write.js"></script>
+    <script src="/src/js/modify.js"></script>
 </head>
 <body>
-    <div id="wrap">
+    <div id="wrap" style="display: none;">
         <div id="writeForm">
             <div class="wrap_writeForm">
-                <input id="board_name" type="hidden" <?php echo 'value="' . $_GET[ 'board' ] . '"'?>/>
                 <div class="input_box">
                     <span class="input_name">글쓴이</span><input name="writer" id="writer" type="text" disabled="disabled" value="<?php echo $_SESSION[ 'valid' ]; ?>"/>
                 </div>
@@ -32,7 +31,7 @@ session_start();
                 </div>
                 <div class="form_button_wrap">
                     <button id="back">이전화면</button>
-                    <button id="submit">글쓰기</button>
+                    <button id="submit">글수정</button>
                 </div>
             </div>
         </div>
