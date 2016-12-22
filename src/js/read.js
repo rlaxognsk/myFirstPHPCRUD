@@ -31,8 +31,15 @@ POFOL.read = {
                     dataType: 'text'
                 } )
                 .done( function ( req ) {
-                    alert( req );
-                    location.href = '/?board=' + query.board;
+                    req = JSON.parse( req );
+
+                    if ( req.valid ) {
+                        location.href = '/?board=' + query.board;
+                    }
+                    else {
+                        alert( req.error );
+                    }
+                    
                 } )
                 .fail( function () {
                     alert( '삭제 요청이 처리되지 않았습니다.' );
@@ -76,13 +83,13 @@ POFOL.read = {
                 dataType: 'text'
             } )
             .done( function ( req ) {
-
-                if ( req === 'o' ) {
-
+                
+                req = JSON.parse( req );
+                if ( req.valid ) {
                     window.location.href = window.location.href;
                 }
                 else {
-                    alert( '오류: ' + req );
+                    alert( '오류: ' + req.error );
                     $submit.prop( 'disabled', false );
                 }
             } )
@@ -118,12 +125,14 @@ POFOL.read = {
                     dataType: 'text'
                 } )
                 .done( function ( req ) {
-                    if ( req === 'o' ) {
-                        alert( '삭제 성공.' );
+                    
+                    req = JSON.parse( req );
+
+                    if ( req.valid ) {
                         window.location.href = window.location.href;
                     }
                     else {
-                        alert( '오류: ' + req );
+                        alert( req.error);
                         is_progress = false;
                     }
                 } )

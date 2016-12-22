@@ -3,11 +3,21 @@ session_start();
 require_once( $_SERVER[ 'DOCUMENT_ROOT' ] . '/DB.php' );
 
 if ( !isset( $_SESSION[ 'valid' ] ) ) {
-    echo '로그인 정보가 유효하지 않습니다.';
+    $res = [
+        'valid' => false,
+        'error' => '로그인 정보가 유효하지 않습니다.'
+    ];
+
+    echo json_encode( $res );
     return false;
 }
 else if ( !isset( $_POST[ 'commentID' ] ) ) {
-    echo '필수 값이 전송되지 않았습니다.';
+    $res = [
+        'valid' => false,
+        'error' => '잘못된 접근입니다.'
+    ];
+
+    echo json_encode( $res );
     return false;
 }
 
@@ -24,11 +34,21 @@ try {
     $result = $prepare->fetch( PDO::FETCH_ASSOC );
 
     if ( !$prepare->rowCount() > 0 ) {
-        echo 'DB에 존재하지 않는 데이터입니다.';
+        $res = [
+            'valid' => false,
+            'error' => '없는 데이터입니다.'
+        ];
+
+        echo json_encode( $res );
         return false;
     }
     elseif ( $result[ 'comment_writer' ] !== $writer && !$_SESSION[ 'is_admin' ] ) {
-        echo '권한이 없습니다.';
+        $res = [
+            'valid' => false,
+            'error' => '권한이 없습니다.'
+        ];
+
+        echo json_encode( $res );
         return false;
     }
 
@@ -43,16 +63,31 @@ try {
     $uresult = $pdo->exec( $updateSQL );
     if ( $dresult && $uresult ) {
         $pdo->commit();
-        echo 'o';
+        $res = [
+            'valid' => true,
+            'message' => '삭제 완료'
+        ];
+
+        echo json_encode( $res );
         return true;
     }
     else {
-        echo '삭제 실패.';
+        $res = [
+            'valid' => false,
+            'error' => '삭제 실패'
+        ];
+
+        echo json_encode( $res );
         return false;
     }
 }
 catch ( PDOException $e ) {
-    echo 'error';
+    $res = [
+        'valid' => false,
+        'error' => 'DB처리 오류'
+    ];
+
+    echo json_encode( $res );
 }
 finally {
     DB::disconnect();

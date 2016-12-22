@@ -5,7 +5,7 @@ session_start();
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>CRUD - C</title>
+    <title>CRUD - U</title>
     <link rel="stylesheet" href="/src/css/common.css"/>
     <link rel="stylesheet" href="/src/css/write.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

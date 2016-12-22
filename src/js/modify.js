@@ -24,7 +24,7 @@ POFOL.modify = {
             if ( req.valid ) {
                 $( '#title' ).val( req.title );
                 CKEDITOR.instances.ckeditor.setData( req.text );
-                $( '#wrap' ).fadeIn();
+                $( '#wrap' ).show();
             }
             else {
                 alert( req.error );

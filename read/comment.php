@@ -3,11 +3,21 @@ session_start();
 require_once( $_SERVER[ 'DOCUMENT_ROOT' ] . '/DB.php' );
 
 if ( !isset( $_SESSION[ 'valid' ] ) ) {
-    echo '로그인된 사용자가 아닙니다.';
+    $res = [
+        'valid' => false,
+        'error' => '로그인 정보가 유효하지 않습니다.'
+    ];
+
+    echo json_encode( $res );
     return false;
 }
 elseif ( !isset( $_POST[ 'parent_article' ] ) || !isset( $_POST[ 'comment_text' ] ) ) {
-    echo '데이터가 올바르지 않습니다.';
+    $res = [
+        'valid' => false,
+        'error' => '잘못된 접근입니다.'
+    ];
+
+    echo json_encode( $res );
     return false;
 }
 
@@ -34,16 +44,31 @@ try {
     $uresult = $pdo->prepare( $usql )->execute( array( ':parent_article' => $parent_article ) );
     if ( $iresult && $uresult ) {
         $pdo->commit();
-        echo 'o';
+        $res = [
+            'valid' => true,
+            'message' => '등록 완료.'
+        ];
+
+        echo json_encode( $res );
         return true;
     }
     else {
-        echo '오류: ' . $pdo->errorCode();
+        $res = [
+            'valid' => false,
+            'error' => '등록 오류'
+        ];
+
+        echo json_encode( $res );
         return false;
     }
 }
 catch ( PDOException $e ) {
-    echo 'error';
+    $res = [
+        'valid' => false,
+        'error' => 'DB처리 오류'
+    ];
+
+    echo json_encode( $res );
 }
 finally {
     DB::disconnect();
