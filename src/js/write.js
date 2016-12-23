@@ -6,6 +6,7 @@ POFOL.write = {
 
         this.prevPage();
         this.submit();
+        $( '#title' ).trigger( 'focus' );
     },
 
     prevPage: function () {
@@ -14,7 +15,7 @@ POFOL.write = {
 
         $prev.on( 'click.write', function () {
 
-            var prevPage = POFOL.cookie.get( 'prevPage' );
+            var prevPage = POFOL.utils.getCookie( 'prevPage' );
             location.href = prevPage !== null ? prevPage : '/';
         } );
     },
@@ -47,14 +48,20 @@ POFOL.write = {
                 data: editorData,
                 dataType: 'text'
             } )
-                .done( function ( req ) { 
-                    if ( req === 'ok' ) {
+                .done( function ( req ) {
+                    req = JSON.parse( req );
+
+                    if ( req.valid ) {
                         var pageMove = '/?board=' + POFOL.utils.getQueryString().board;
                         location.href = pageMove;
                     }
+                    else {
+                        alert( req.error );
+                        $( 'button' ).prop( 'disabled', false );
+                    }
                 } )
                 .fail( function () { 
-                    alert( req );
+                    alert( '글 작성에 실패했습니다.' );
                     $( 'button' ).prop( 'disabled', false );
                 } );
         } );

@@ -5,7 +5,13 @@ require_once( $_SERVER[ 'DOCUMENT_ROOT' ] . '/DB.php' );
 try {
 
     if ( !isset( $_SESSION[ 'valid' ] ) ) {
-        echo '로그인된 사용자가 아닙니다.';
+        $res = [
+            'valid' => false,
+            'error' => '로그인된 사용자가 아닙니다.'
+        ];
+
+        echo json_encode( $res );
+        return false;
         return false;
     }
 
@@ -14,7 +20,13 @@ try {
     if ( !isset( $post[ 'board_name'] ) || !isset( $post[ 'article_title' ] ) ||
          !isset( $post[ 'article_text' ] ) ) {
 
-        echo '올바르지 않은 데이터입니다.';
+        $res = [
+            'valid' => false,
+            'error' => '올바르지 않은 데이터입니다.'
+        ];
+
+        echo json_encode( $res );
+        return false;
         return false;
     }
 
@@ -26,7 +38,7 @@ try {
     $pdo = DB::connect();
     $pdo->beginTransaction();
 
-    $insertSQL = "INSERT INTO articles VALUES ( '', :board_name, :board_number, :article_title, '', :article_writer, CURDATE(), :article_text )";
+    $insertSQL = "INSERT INTO articles VALUES ( '', :board_name, :board_number, :article_title, '', :article_writer, CURDATE(), 0, :article_text )";
 
     $updateSQL = "UPDATE boards SET board_latest_number = :board_latest_number WHERE board_name = :board_name";
 
@@ -38,7 +50,13 @@ try {
     $board_number = $prepare->fetch( PDO::FETCH_ASSOC );
     
     if ( empty( $board_number ) ) {
-        echo '존재하지 않는 게시판입니다.';
+        $res = [
+            'valid' => false,
+            'error' => '존재하지 않는 게시판입니다.'
+        ];
+
+        echo json_encode( $res );
+        return false;
         return false;
     }
 
@@ -49,7 +67,17 @@ try {
                   ':article_title' => $article_title, ':article_writer' => $article_writer,
                   ':article_text' => $article_text );
     $prepare = $pdo->prepare( $insertSQL );
-    $prepare->execute( $tag );
+    $result = $prepare->execute( $tag );
+
+    if ( $result === false ) {
+        $res = [
+            'valid' => false,
+            'error' => '글 작성에 실패했습니다.'
+        ];
+
+        echo json_encode( $res );
+        return false;
+    }
 
     // update number
     $tag = array( ':board_latest_number' => $board_number, ':board_name' => $board_name );
@@ -57,10 +85,20 @@ try {
     $prepare->execute( $tag );
 
     $pdo->commit();
-    echo 'ok';
+    $res = [
+        'valid' => true
+    ];
+    echo json_encode( $res );
+    return true;
 }
 catch ( PDOException $e ) {
-    echo '오류가 발생하였습니다. 잠시 후 다시시도해주세요. ';
+    $res = [
+        'valid' => false,
+        'error' => 'DB처리 오류 발생.'
+    ];
+
+    echo json_encode( $res );
+    return false;
 }
 finally {
     DB::disconnect();

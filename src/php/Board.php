@@ -24,7 +24,7 @@ class Board
             $board = isset( $_GET[ 'board' ] ) ? $_GET[ 'board' ] : header( 'Location: /?board=main' );
             $offset = isset( $_GET[ 'page' ] ) ? $_GET[ 'page' ] : 1;
             $offset = ( int )( $offset - 1 ) * $pagePerArticle;
-            $sql = "SELECT id, board_name, board_number, article_title, article_comment, article_writer, article_date FROM articles WHERE board_name = :board "
+            $sql = "SELECT id, board_name, board_number, article_title, article_comment, article_writer, article_date, article_hits FROM articles WHERE board_name = :board "
                     . "ORDER BY board_number DESC LIMIT {$pagePerArticle} OFFSET :offset";
 
             $prepare = $pdo->prepare( $sql );
@@ -40,6 +40,7 @@ class Board
             echo '<th class="a_t">제목</th>';
             echo '<th class="a_w">작성자</th>';
             echo '<th class="a_d">날짜</th>';
+            echo '<th class="a_hits">조회수</th>';
             if ( !empty( $_SESSION[ 'is_admin' ] ) ) {
                 echo '<th class="a_delete">삭제<input type="checkbox" /></th>';
             }
@@ -58,6 +59,7 @@ class Board
                     echo '<td class="a_t"><a href="' . $link . '">' . $row[ 'article_title' ] . '</a> ' . $comment . '</td>';
                     echo '<td class="a_w">' . $row[ 'article_writer' ] . '</td>';
                     echo '<td class="a_d">' . $row[ 'article_date' ] . '</td>';
+                    echo '<td class="a_hits">' . $row[ 'article_hits' ] . '</td>';
                     if ( !empty( $_SESSION[ 'is_admin' ] ) ) {
                         echo '<td class="a_delete"><input type="checkbox" /></td>';
                     }
@@ -68,7 +70,7 @@ class Board
             }
             else {
                 echo '<tr>';
-                echo '<td class="empty_boards" colspan="4">게시글이 없습니다.</td>';
+                echo '<td class="empty_boards" colspan="5">게시글이 없습니다.</td>';
                 echo '</tr>';
             }
             
@@ -76,7 +78,7 @@ class Board
 
         }
         catch ( PDOException $e ) {
-            echo '<tr><td>' . $e->getMessage() . '</td></tr>';
+            echo '<tr><td>DB접속 오류</td></tr>';
         }
         finally {
             DB::disconnect();
@@ -98,8 +100,17 @@ class Board
 
                 echo '<li class="' . $active . '"><a href="/?board=' . $row[ 'board_name' ] . '">' . $row[ 'board_name' ] . '</a></li>';
             }
-            echo '</ul>';
-
+            if ( isset( $_SESSION[ 'is_admin' ] ) && $_SESSION[ 'is_admin' ] === true ) {
+                echo '<li class="add_board"><a href="javascript:;">+</a></li></ul>';
+                
+                echo '<div class="admin_add_board" style="display: none;"><h3>게시판 추가</h3><input type="text" id="addBoardName" maxlength="10"/><br/>';
+                echo '<button id="addBoardOK">확인</button>';
+                echo '</div>';
+                echo '<script src="/src/js/admin.js"></script>';
+            }
+            else {
+                echo '</ul>';
+            }
         }
         catch ( PDOException $e ) {
             echo 'error';
@@ -115,11 +126,11 @@ class Board
         if ( !isset( $_GET[ 'board' ] ) || !isset( $_GET[ 'no' ] ) ) {
             header( 'Location: /' );
         }
-        
-        $pdo = DB::connect();
-        $sql = 'SELECT * from articles where board_name = :board and board_number = :number';
-
         try {
+            $pdo = DB::connect();
+            $pdo->beginTransaction();
+            $sql = "SELECT * from articles where board_name = :board and board_number = :number";
+
             $prepare = $pdo->prepare( $sql );
             $prepare->execute( array( ':board' => $_GET[ 'board' ], ':number' => $_GET[ 'no' ] ) );
             $result = $prepare->fetch( PDO::FETCH_ASSOC );
@@ -131,6 +142,9 @@ class Board
                 $is_modified = false;
             }
 
+            $usql = "UPDATE articles SET article_hits = article_hits + 1 WHERE id = {$result[ 'id' ]}";
+            $pdo->exec( $usql );
+            
             echo '<div class="read_head">';
                 echo '<div class="head_wrap">';
                     echo '<h3 class="a_t">' . $result[ 'article_title' ] . '</h3>';
@@ -142,6 +156,7 @@ class Board
                 echo '</div>';
             echo '</div>';
             echo '<div class="read_body">' . $result[ 'article_text' ] . '</div>';
+            $pdo->commit();
             return $result[ 'id' ];
         }
         catch ( PDOException $e ) {
@@ -214,9 +229,13 @@ class Board
             $blockPerPage = self::$blockPerPage;
 
             $pdo = DB::connect();
-            $csql = "SELECT COUNT(id) AS count FROM articles";
+            $csql = "SELECT COUNT(id) AS count FROM articles WHERE board_name = :board_name";
             
-            $allArticle = $pdo->query( $csql )->fetch( PDO::FETCH_ASSOC )[ 'count' ];
+            $prepare = $pdo->prepare( $csql );
+            $prepare->bindParam( ':board_name', $_GET[ 'board' ] , PDO::PARAM_STR );
+            $prepare->execute();
+            
+            $allArticle = $prepare->fetch( PDO::FETCH_ASSOC )[ 'count' ];
             $allPage = ceil( $allArticle / $pagePerArticle );
             $nowPage = $getPage > 0 ? $getPage : 1;
             $nowBlock = ceil( $nowPage / $blockPerPage );

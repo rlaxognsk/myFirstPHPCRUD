@@ -65,11 +65,11 @@
 .wrap_board {
     position: relative;
     margin: 20px auto;
-    width: 860px;
+    width: 850px;
 }
 
 .table_wrapper {
-    width: 860px;
+    width: 850px;
     padding: 10px 0;
     border-top: 1px solid #aaa;
     border-bottom: 1px solid #aaa;
@@ -87,6 +87,7 @@ th {
     &.a_t { width: 530px; }
     &.a_w { width: 140px; }
     &.a_d { width: 100px; }
+    &.a_hits { width: 100px; }
     &.a_delete { width: 60px; }
 }
 
