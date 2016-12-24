@@ -28,9 +28,18 @@ POFOL.admin = {
             else {
                 $( this ).addClass( 'active' );
                 $adminAddBoard.show();
+                $addBoardName.trigger( 'focus' );
             }
         } );
 
+        $addBoardName.on( 'keypress', function ( e ) {
+
+            if ( e.keyCode === 13 ) {
+                $( '#addBoardOK' ).trigger( 'click' );
+            }
+
+        } );
+        
         $( '#addBoardOK' ).on( 'click', function () {
             var newBoardName = $addBoardName.val();
 

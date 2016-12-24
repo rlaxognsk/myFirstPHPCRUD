@@ -28,9 +28,7 @@ require_once( $_SERVER[ 'DOCUMENT_ROOT' ] . '/src/php/Auth.php' );
                     ?>
                 </div>
                 <?php $comment_id = Board::showArticle(); ?>
-                <div class="read_comment">
-                    <?php Board::showComments( $comment_id ); ?>
-                </div>
+                <div class="read_comment"></div>
                 <div class="write_comment">
                     <?php Auth::writeComment(); ?>
                 </div>

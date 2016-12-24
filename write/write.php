@@ -12,7 +12,6 @@ try {
 
         echo json_encode( $res );
         return false;
-        return false;
     }
 
     $post = $_POST;
@@ -27,11 +26,10 @@ try {
 
         echo json_encode( $res );
         return false;
-        return false;
     }
 
     $board_name = $post[ 'board_name' ];
-    $article_title = $post[ 'article_title' ];
+    $article_title = trim( $post[ 'article_title' ] );
     $article_text = $post[ 'article_text' ];
     $article_writer = $_SESSION[ 'valid' ];
 
@@ -56,7 +54,6 @@ try {
         ];
 
         echo json_encode( $res );
-        return false;
         return false;
     }
 
@@ -98,7 +95,6 @@ catch ( PDOException $e ) {
     ];
 
     echo json_encode( $res );
-    return false;
 }
 finally {
     DB::disconnect();

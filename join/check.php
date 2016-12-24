@@ -28,7 +28,7 @@ try {
     $email = $_POST[ 'user_email' ];
 
     $pdo = DB::connect();
-    $sql = 'SELECT * FROM users WHERE user_id = :id OR user_email = :email';
+    $sql = "SELECT * FROM users WHERE user_id = :id OR user_email = :email";
     $prepare = $pdo->prepare( $sql );
     
     $prepare->execute( array( ':id' => $id, ':email' => $email ) );
@@ -44,7 +44,7 @@ try {
         return true;
     }
     else {
-        $sql = 'INSERT INTO users ( user_id, user_pass, user_email ) VALUES ( :id, sha1(:pass), :email )';
+        $sql = "INSERT INTO users ( user_id, user_pass, user_email ) VALUES ( :id, sha1(:pass), :email )";
         $prepare = $pdo->prepare( $sql );
 
         $prepare->execute( array( ':id' => $id, ':pass' => $pass, ':email' => $email ) );

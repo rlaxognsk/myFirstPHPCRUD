@@ -9,7 +9,7 @@ if ( !isset( $_POST[ 'email' ] ) ) {
 }
 
 $pdo = DB::connect();
-$sql = 'SELECT * FROM users WHERE user_email = :email';
+$sql = "SELECT * FROM users WHERE user_email = :email";
 
 try {
 

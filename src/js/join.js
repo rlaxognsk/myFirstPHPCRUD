@@ -55,7 +55,8 @@ POFOL.join = {
                 } )
                     .done( function ( req ) {
 
-                        if ( req === 'ok' ) {
+                        req = JSON.parse( req );
+                        if ( req.valid ) {
                             $id_valid.css( 'color', '#00f' )[ 0 ].innerHTML = '사용 가능한 아이디입니다.';
                             that.idValid = true;
                         }

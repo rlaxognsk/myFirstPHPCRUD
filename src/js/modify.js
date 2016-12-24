@@ -6,6 +6,7 @@ POFOL.modify = {
 
         this.getData();
         this.submit();
+        this.prevPage();
         
     },
     getData: function () {
@@ -80,7 +81,17 @@ POFOL.modify = {
                 $( 'button' ).prop( 'disabled', 'false' );
             } );
         } );
-    }    
+    },
+
+    prevPage: function () {
+        $( '#back' ).on( 'click', function () {
+
+            var confirm = window.confirm( '내용이 수정되지 않습니다.' );
+            if ( confirm ) {
+                window.location.href = window.location.href.replace( 'modify', 'read' );
+            }
+        } );
+    }
 };
 
 $( function () {

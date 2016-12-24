@@ -56,8 +56,16 @@ POFOL.main = {
                     dataType: 'text'
                 } )
                 .done( function ( req ) {
-                    alert( req );
-                    location.href = location.href;
+                    req = JSON.parse( req );
+
+                    if ( req.valid ) {
+                        alert( req.message );
+                        window.location.href = window.location.href;
+                    }
+                    else {
+                        alert( req.error );
+                    }
+                    
                 } )
                 .fail( function () {
                     alert( '전송 오류.' );

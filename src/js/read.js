@@ -4,6 +4,7 @@ POFOL.read = {
 
     init: function () {
 
+        this.readComment();
         this.articleDelete();
         this.addComment();
         this.deleteComment();
@@ -48,10 +49,35 @@ POFOL.read = {
         } );
     },
 
+    readComment: function () {
+        var articleID = $( '#articleID' ).val();
+        var commentList = $( '.read_comment' )[ 0 ];
+
+        $.ajax( {
+            url: './comment_read.php?id=' + articleID,
+            dataType: 'html',
+            method: 'get'
+        } )
+        .done( function ( req ) {
+            if ( req !== 'x' ) {
+                commentList.innerHTML = req;
+            }
+            else {
+                commentList.innerHTML = '댓글 정보를 받아오지 못했습니다.';
+                console.log( '실패' );
+            }
+        } )
+        .fail( function () {
+            commentList.innerHTML = '댓글 정보를 받아오지 못했습니다.';
+        } );
+    },
+
     addComment: function () {
 
-        $text = $( '#commentText' ),
-        $submit = $( '#submit' );
+        var that = this;
+
+        var $text = $( '#commentText' ),
+            $submit = $( '#submit' );
 
         $text.on( 'keydown', function ( e ) {
             if ( e.keyCode === 13 ) {
@@ -77,7 +103,7 @@ POFOL.read = {
             $submit.prop( 'disabled', true );
 
             $.ajax( {
-                url: './comment.php',
+                url: './comment_add.php',
                 method: 'post',
                 data: data,
                 dataType: 'text'
@@ -86,7 +112,9 @@ POFOL.read = {
                 
                 req = JSON.parse( req );
                 if ( req.valid ) {
-                    window.location.href = window.location.href;
+                    that.readComment();
+                    $text.val( '' );
+                    $submit.prop( 'disabled', false );
                 }
                 else {
                     alert( '오류: ' + req.error );
@@ -104,9 +132,10 @@ POFOL.read = {
 
     deleteComment: function () {
 
+        var that = this;
         var is_progress = false;
 
-        $( '.comment_list' ).on( 'click', '.c_delete a', function ( e ) {
+        $( '.read_comment' ).on( 'click', '.c_delete a', function ( e ) {
             
             if ( is_progress ) {
                 return false;
@@ -129,10 +158,11 @@ POFOL.read = {
                     req = JSON.parse( req );
 
                     if ( req.valid ) {
-                        window.location.href = window.location.href;
+                        that.readComment();
+                        is_progress = false;
                     }
                     else {
-                        alert( req.error);
+                        alert( req.error );
                         is_progress = false;
                     }
                 } )

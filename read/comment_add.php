@@ -24,7 +24,7 @@ elseif ( !isset( $_POST[ 'parent_article' ] ) || !isset( $_POST[ 'comment_text' 
 try {
 
     $parent_article = $_POST[ 'parent_article' ];
-    $comment_text = $_POST[ 'comment_text' ];
+    $comment_text = trim( $_POST[ 'comment_text' ] );
     $comment_writer = $_SESSION[ 'valid' ];
 
     if ( mb_strlen( $comment_text ) > 200 ) {
