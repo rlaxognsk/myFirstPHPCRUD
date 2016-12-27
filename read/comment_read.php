@@ -3,20 +3,49 @@ session_start();
 require_once( $_SERVER[ 'DOCUMENT_ROOT' ] . '/DB.php' );
 
 try {
-    $id = ( int )$_GET[ 'id' ];
+    define( 'PAGE_PER_COMMENT', 10 );
+    define( 'BLOCK_PER_PAGE', 5 );
+
     $pdo = DB::connect();
-    $sql = "SELECT * FROM comments WHERE parent_article = :parent_article";
 
+    // get article id
+    $id = ( int )$_GET[ 'id' ];
+
+    // get page
+    $getPage = isset( $_GET[ 'page' ] ) ? ( int )( $_GET[ 'page' ] ) : 1;
+
+    // count comment
+    $countSQL = "SELECT COUNT( id ) AS count FROM comments WHERE parent_article = {$id}";
+    $prepare = $pdo->prepare( $countSQL );
+    $prepare->execute();
+    $allComment = $prepare->fetch( PDO::FETCH_ASSOC )[ 'count' ];
+
+    // set variable for paging
+    $allPage = ceil( $allComment / PAGE_PER_COMMENT );
+    $nowPage = $getPage > 0 ? $getPage : 1;
+    $nowBlock = ceil( $nowPage / BLOCK_PER_PAGE );
+    $lastBlock = ceil( $allPage / BLOCK_PER_PAGE );
+    $prevBlockPage = ( $nowBlock - 1 ) * BLOCK_PER_PAGE;
+    $nextBlockPage = ( ( $nowBlock + 1 ) * BLOCK_PER_PAGE ) - ( BLOCK_PER_PAGE - 1 );
+
+    // set offset desc
+    $offset = abs( $nowPage - $allPage ) * PAGE_PER_COMMENT;
+
+    // load comment
+    $sql = "SELECT * FROM comments WHERE parent_article = :parent_article " . 
+           "LIMIT " . PAGE_PER_COMMENT . " OFFSET :offset";
+    
     $prepare = $pdo->prepare( $sql );
-    $prepare->execute( array( ':parent_article' => $id ) );
+    $prepare->bindParam( ':parent_article', $id, PDO::PARAM_INT );
+    $prepare->bindParam( ':offset', $offset, PDO::PARAM_INT );
+    $prepare->execute();
 
-    $count = $prepare->rowCount();
     $result = $prepare->fetchAll( PDO::FETCH_ASSOC );
 
     $writer = isset( $_SESSION[ 'valid' ] ) ? $_SESSION[ 'valid' ] : false;
     $is_admin = !empty( $_SESSION[ 'is_admin' ] ) ? true : false;
 
-    echo '<p class="comments_count">댓글 <span class="bold">' . $count . '</span></p>';
+    echo '<p class="comments_count">댓글 <span class="bold">' . $allComment . '</span></p>';
     echo '<table class="comment_list">';
     echo '<tbody>';
     if ( !empty( $result ) ) {
@@ -43,6 +72,36 @@ try {
 
     echo '</tbody>';
     echo '</table>';
+
+    // rendering paging
+    echo '<div class="wrap_c_p"><ul class="comment_pagination">';
+    // loose check
+    if ( $nowBlock != 1 ) {
+        echo '<li><a class="c_paging" href="javascript:;" data-page="1"><<</a></li>';
+        echo '<li><a class="c_paging" href="javascript:;" data-page="'. $prevBlockPage . '"><</a></li>';
+    }
+
+    for ( $i = 1; $i <= BLOCK_PER_PAGE; $i++ ) {
+        $p = BLOCK_PER_PAGE * ( $nowBlock - 1 ) + $i;
+        if ( $p > $allPage ) {
+            break;
+        }
+        // loose check
+        if ( $p == $nowPage ) {
+            echo '<li class="now">';
+        }
+        else {
+            echo '<li>';
+        }
+
+        echo '<a class="c_paging" href="javascript:;" data-page="' . $p . '">' . $p . '</a></li>';
+    }
+
+    if ( $nowBlock < $lastBlock ) {
+        echo '<li><a class="c_paging" href="javascript:;" data-page="' . $nextBlockPage . '">></a></li>';
+        echo '<li><a class="c_paging" href="javascript:;" data-page="' . $allPage . '">>></a></li>';
+    }
+    echo '</ul></div>';
 }
 catch ( PDOException $e ) {
     echo 'x';

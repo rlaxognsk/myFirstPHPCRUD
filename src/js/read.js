@@ -4,7 +4,8 @@ POFOL.read = {
 
     init: function () {
 
-        this.readComment();
+        this.readComment( 1 );
+        this.pagingComment();
         this.articleDelete();
         this.addComment();
         this.deleteComment();
@@ -49,12 +50,12 @@ POFOL.read = {
         } );
     },
 
-    readComment: function () {
+    readComment: function ( page ) {
         var articleID = $( '#articleID' ).val();
         var commentList = $( '.read_comment' )[ 0 ];
 
         $.ajax( {
-            url: './comment_read.php?id=' + articleID,
+            url: './comment_read.php?id=' + articleID + '&page=' + page,
             dataType: 'html',
             method: 'get'
         } )
@@ -72,6 +73,26 @@ POFOL.read = {
         } );
     },
 
+    pagingComment: function () {
+        
+        var that = this;
+        var $read_comment = $( '.read_comment' );
+        var pos_read_comment = $read_comment.offset().top;
+
+        $read_comment.on( 'click', '.c_paging', function ( e ) {
+            console.log( 'click' );
+            e.preventDefault();
+            var page = $( this ).data( 'page' );
+            that.readComment( page );
+
+            if ( $( window ).scrollTop() > pos_read_comment ) {
+                $( 'html, body' ).animate( {
+                    scrollTop: pos_read_comment + 'px'
+                }, 500 );
+            }
+
+        } );
+    },
     addComment: function () {
 
         var that = this;
@@ -112,7 +133,7 @@ POFOL.read = {
                 
                 req = JSON.parse( req );
                 if ( req.valid ) {
-                    that.readComment();
+                    that.readComment( 1 );
                     $text.val( '' );
                     $submit.prop( 'disabled', false );
                 }

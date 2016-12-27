@@ -137,6 +137,7 @@
 }
 .comment_list {
 
+    width: 100%;
     font-size: 13px;
     margin-top: 5px;
     border-collapse: collapse;
@@ -169,6 +170,43 @@
     }
 }
 
+.wrap_c_p {
+    text-align: center;
+}
+.comment_pagination {
+    display: inline-block;
+    margin: 0 auto;
+    padding: 0;
+
+    &:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+    li {
+        float: left;
+        margin-left: 3px;
+        list-style-type: none;
+        color: #333;
+        font-size: 13px;
+        
+        &.now {
+            background-color: #aaa;
+            color: #fff;
+        }
+        a {
+            display: block;
+            width: 25px;
+            height: 25px;
+            line-height: 25px;
+            border: 1px solid #aaa;
+            text-decoration: none;
+            color: inherit;
+            
+        }
+    }
+
+}
 .write_comment {
     padding: 10px 5px;
 

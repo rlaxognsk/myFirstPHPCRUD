@@ -31,6 +31,7 @@ require_once( '/src/php/Auth.php' );
                     <?php Board::showBoard(); ?>
                 </div>
                 <div class="wrap_board_foot">
+                    <?php Auth::boardManage(); ?>
                     <?php Auth::articleManage(); ?>
                     <div class="wrap_pagination">
                     <?php Board::paging(); ?>

@@ -18,7 +18,21 @@ class Auth
             echo '</ul>';
         }
     }
+    public static function boardManage()
+    {
+        if ( !isset( $_SESSION[ 'valid' ] ) ) {
+            return false;
+        }
+        if ( empty( $_SESSION[ 'is_admin' ] ) ) {
+            return false;
+        }
+        if ( $_GET[ 'board' ] === 'main' ) {
+            return false;
+        }
 
+        echo '<button id="deleteBoard" data-board="' . $_GET[ 'board' ] . '">게시판 삭제</button>';
+
+    }
     public static function articleManage()
     {
         if ( !isset( $_SESSION[ 'valid' ] ) ) {

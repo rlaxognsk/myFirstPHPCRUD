@@ -6,8 +6,8 @@ class Board
     
     /* pagination variable */
 
-    private static $pagePerArticle = 5;
-    private static $blockPerPage = 5;
+    const PAGE_PER_ARTICLE = 5;
+    const BLOCK_PER_PAGE = 5;
 
     public function __construct() {
         echo 'Don\'t create this class instance.';
@@ -18,14 +18,11 @@ class Board
         try {
             $pdo = DB::connect();
 
-            $pagePerArticle = self::$pagePerArticle;
-            $blockPerPage = self::$blockPerPage;
-
             $board = isset( $_GET[ 'board' ] ) ? $_GET[ 'board' ] : header( 'Location: /?board=main' );
             $offset = isset( $_GET[ 'page' ] ) ? $_GET[ 'page' ] : 1;
-            $offset = ( int )( $offset - 1 ) * $pagePerArticle;
+            $offset = ( int )( $offset - 1 ) * self::PAGE_PER_ARTICLE;
             $sql = "SELECT id, board_name, board_number, article_title, article_comment, article_writer, article_date, article_hits FROM articles WHERE board_name = :board "
-                    . "ORDER BY board_number DESC LIMIT {$pagePerArticle} OFFSET :offset";
+                    . "ORDER BY board_number DESC LIMIT " . self::PAGE_PER_ARTICLE . " OFFSET :offset";
 
             $prepare = $pdo->prepare( $sql );
             $prepare->bindParam( ':board', $board, PDO::PARAM_STR );
@@ -172,8 +169,6 @@ class Board
     {
         try {
             $getPage = isset( $_GET[ 'page' ] ) ? ( int )( $_GET[ 'page' ] ) : 1;
-            $pagePerArticle = self::$pagePerArticle;
-            $blockPerPage = self::$blockPerPage;
 
             $pdo = DB::connect();
             $csql = "SELECT COUNT(id) AS count FROM articles WHERE board_name = :board_name";
@@ -183,12 +178,12 @@ class Board
             $prepare->execute();
             
             $allArticle = $prepare->fetch( PDO::FETCH_ASSOC )[ 'count' ];
-            $allPage = ceil( $allArticle / $pagePerArticle );
+            $allPage = ceil( $allArticle / self::PAGE_PER_ARTICLE );
             $nowPage = $getPage > 0 ? $getPage : 1;
-            $nowBlock = ceil( $nowPage / $blockPerPage );
-            $lastBlock = ceil( $allPage / $blockPerPage );
-            $prevBlockPage = ( $nowBlock - 1 ) * $blockPerPage;
-            $nextBlockPage = ( ( $nowBlock + 1 ) * $blockPerPage ) - ( $blockPerPage - 1 );
+            $nowBlock = ceil( $nowPage / self::BLOCK_PER_PAGE );
+            $lastBlock = ceil( $allPage / self::BLOCK_PER_PAGE );
+            $prevBlockPage = ( $nowBlock - 1 ) * self::BLOCK_PER_PAGE;
+            $nextBlockPage = ( ( $nowBlock + 1 ) * self::BLOCK_PER_PAGE ) - ( self::BLOCK_PER_PAGE - 1 );
 
             // rendering start
             echo '<ul class="pagination">';
@@ -198,8 +193,8 @@ class Board
                 echo '<li><a href="./?board=' . $_GET[ 'board' ] . '&page=' . $prevBlockPage . '"><</a></li>';
             }
             
-            for ( $i = 1; $i <= $blockPerPage; $i++ ) {
-                $p = $blockPerPage * ( $nowBlock - 1 ) + $i;
+            for ( $i = 1; $i <= self::BLOCK_PER_PAGE; $i++ ) {
+                $p = self::BLOCK_PER_PAGE * ( $nowBlock - 1 ) + $i;
                 if ( $p > $allPage ) {
                     break;
                 }
